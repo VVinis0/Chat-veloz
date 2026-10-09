@@ -1,0 +1,127 @@
+/* ==========================================================
+   VELOZ CHAT (versão só HTML + CSS)
+   Índice:
+   1. Cores (mude AQUI)
+   2. Base e controles escondidos
+   3. Cabeçalho
+   4. Barra lateral
+   5. Painéis, etapas e mensagens
+   6. Botões e barra de envio
+   7. LÓGICA DE INTERAÇÃO (o "JavaScript" feito com :checked)
+   8. Celular
+   ========================================================== */
+
+/* ---------- 1. CORES ---------- */
+:root {
+  --ac: #E8590C;   /* laranja principal */
+  --side: #1F2A44; /* fundo da barra lateral */
+   --sidet: #EEF0F4  ; /* texto da barra lateral */         
+  --ok: #2b8a3e;   /* verde */
+  --no: #c92a2a;   /* vermelho */
+   --bd: #0e4dc9;
+   --mut: #6b7385;
+   --tx: #1a1d26;
+}
+
+/* ---------- 2. BASE E CONTROLES ESCONDIDOS ---------- */
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px system-ui, sans-serif; color: var(--tx); height: 100vh; display: flex; flex-direction: column; }
+.app { flex: 1; display: flex; min-height: 0; }
+
+/* Os radios ficam invisíveis; só os <label> aparecem */
+.ctl { position: absolute; opacity: 0; pointer-events: none; }
+
+/* ---------- 3. CABEÇALHO ---------- */
+header { background: var(--ac); color: #fff; padding: 8px 14px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+header b { font-size: 17px; }
+.visao { margin-left: auto; }
+.tab { padding: 4px 10px; border-radius: 6px; cursor: pointer; background: rgba(255,255,255,.2); margin-left: 4px; }
+#logoVeloz img { height: 20px; margin-right: 6px; vertical-align: middle; }
+
+/* ---------- 4. BARRA LATERAL ---------- */
+aside { width: 250px; background: var(--side); color: var(--sidet); overflow: auto; padding: 10px 0; }
+aside h4 { margin: 8px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.ch { padding: 7px 14px; cursor: pointer; display: flex; justify-content: space-between; gap: 6px; }
+.ch:hover { background: #2c3a5c; }
+.ch small { display: block; opacity: .75; font-size: 12px; }
+.dot { background: #fcc419; color: #000; border-radius: 10px; padding: 0 7px; font-size: 12px; height: 18px; }
+#logoVelozLateral { width: 98%; margin: 100px auto 10px; display: block;  } 
+
+/* ---------- 5. PAINÉIS, ETAPAS E MENSAGENS ---------- */
+main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.painel { display: none; flex: 1; flex-direction: column; min-height: 0; }  /* escondido; a seção 7 mostra o escolhido */
+.top { padding: 10px 16px; border-bottom: 1px solid var(--bd); }
+.steps { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.st { font-size: 12px; padding: 3px 8px; border-radius: 12px; background: #eef0f4; color: var(--mut); }
+.st.on { background: var(--ac); color: #fff; }
+.st.past { background: #d3f9d8; color: var(--ok); }
+
+.msgs { flex: 1; overflow: auto; padding: 14px 16px; background: #fafbfc; }
+.m { margin-bottom: 12px; max-width: 640px; }
+.m .w { font-weight: 600; }
+.m .w span { font-weight: 400; color: var(--mut); font-size: 12px; margin-left: 6px; }
+.tag { font-size: 11px; background: #e7ecf7; border-radius: 4px; padding: 1px 5px; }
+.sys { text-align: center; color: var(--mut); font-size: 13px; margin: 10px 0; }
+.card { border: 1px solid var(--bd); border-radius: 8px; background: #fff; padding: 10px; margin-top: 4px; }
+.ph { height: 110px; width: 200px; border-radius: 6px; margin-top: 4px; padding: 6px; font-size: 12px; color: var(--mut);
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      background: repeating-linear-gradient(45deg, #dfe3ea, #dfe3ea 10px, #eceff4 10px, #eceff4 20px); }
+.q table { width: 100%; border-collapse: collapse; }
+.q td { padding: 3px 0; }
+.q td:last-child { text-align: right; }
+.res { font-weight: 600; margin-top: 8px; }
+.verde { color: var(--ok); }
+.vermelho { color: var(--no); }
+.aguarda { color: #e67700; }
+
+/* ---------- 6. BOTÕES E BARRA DE ENVIO ---------- */
+.btn { display: inline-block; cursor: pointer; border-radius: 6px; padding: 6px 12px; font-size: 14px; margin-right: 6px; }
+.ok  { background: var(--ok); color: #fff; }
+.no  { background: var(--no); color: #fff; }
+.sec { background: #eef0f4; color: var(--tx); }
+.botoes { margin-top: 8px; display: flex; }
+.envio { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--bd); }
+.envio input { flex: 1; padding: 8px; border: 1px solid var(--bd); border-radius: 6px; }
+
+/* ==========================================================
+   7. LÓGICA DE INTERAÇÃO
+   Leitura: "#c1:checked ~ .app .p1" = QUANDO o radio c1 estiver
+   marcado, aplique a regra ao .p1 que está dentro de .app.
+   ========================================================== */
+
+/* 7.1 Mostrar o painel do canal escolhido */
+#c1:checked ~ .app .p1,
+#c2:checked ~ .app .p2,
+#c3:checked ~ .app .p3 { display: flex; }
+
+/* 7.2 Destacar o canal selecionado na barra lateral */
+#c1:checked ~ .app .ch1,
+#c2:checked ~ .app .ch2,
+#c3:checked ~ .app .ch3 { background: var(--ac); color: #fff; }
+
+/* 7.3 Destacar a visão escolhida no cabeçalho */
+#v-cli:checked ~ header label[for=v-cli],
+#v-rec:checked ~ header label[for=v-rec] { background: #fff; color: var(--ac); font-weight: 600; }
+
+/* 7.4 Visão Recepção: esconde os botões Aprovar/Recusar e mostra "Aguardando cliente" */
+.aguarda { display: none; }
+#v-rec:checked ~ .app .botoes { display: none; }
+#v-rec:checked ~ .app .aguarda { display: block; }
+
+/* 7.5 Estados do orçamento (s-pend = pendente, s-ok = aprovado, s-no = recusado)
+   Por padrão só o "pendente" aparece; ao decidir, trocamos. */
+.s-ok, .s-no, .steps-ok { display: none; }
+
+#o-ok:checked ~ .app .s-pend,
+#o-ok:checked ~ .app .steps-pend,
+#o-no:checked ~ .app .s-pend { display: none; }
+
+#o-ok:checked ~ .app .s-ok  { display: revert; }
+#o-ok:checked ~ .app .steps-ok { display: flex; }   /* etapa passa para "Em serviço" */
+#o-no:checked ~ .app .s-no  { display: revert; }
+
+/* ---------- 8. CELULAR ---------- */
+@media (max-width: 700px) {
+   aside { width: 120px; }
+   .ch small { display: none; }
+}

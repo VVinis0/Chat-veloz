@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Veloz Chat – Auto Center Veloz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================
+      0. CONTROLES ESCONDIDOS (o "cérebro" da página, sem JavaScript)
+      Cada <input type="radio"> guarda um estado. O CSS lê qual está
+      marcado (:checked) e mostra/esconde as partes certas.
+    IMPORTANTE: eles precisam ficar ANTES do <header> e do .app.
+    ========================================================== -->
+
+  <!-- Canal aberto (qual OS aparece na tela) -->
+  <input class="ctl" type="radio" name="canal" id="c1" checked>
+  <input class="ctl" type="radio" name="canal" id="c2">
+  <input class="ctl" type="radio" name="canal" id="c3">
+
+  <!-- Visão atual: Cliente (vê botões) ou Recepção (vê "aguardando") -->
+  <input class="ctl" type="radio" name="visao" id="v-cli" checked>
+  <input class="ctl" type="radio" name="visao" id="v-rec">
+
+  <!-- Decisão do orçamento da OS 1: pendente / aprovado / recusado -->
+  <input class="ctl" type="radio" name="orc" id="o-pend" checked>
+  <input class="ctl" type="radio" name="orc" id="o-ok">
+  <input class="ctl" type="radio" name="orc" id="o-no">
+
+
+  <!-- ============ 1. CABEÇALHO ============ -->
+  <header>
+    <b id="logoVeloz"><img src="/modelo/logo-veloz-chat.png" alt=""> Veloz Chat</b>
+    <span>Auto Center Veloz</span>
+    <!-- Cada <label for="..."> funciona como botão que marca o radio de mesmo id -->
+    <span class="visao">Visão:
+      <label for="v-cli" class="tab">Cliente</label>
+      <label for="v-rec" class="tab">Recepção</label>
+    </span>
+  </header>
+
+  <div class="app">
+
+    <!-- ============ 2. BARRA LATERAL (canais) ============ -->
+    <aside>
+      <h4>Ordens de serviço</h4>
+
+      <!-- Canal 1: o status muda conforme o orçamento (classes s-pend, s-ok, s-no) -->
+      <label class="ch ch1" for="c1">
+        <div># ABC-1D23
+          <small>
+            <span class="s-pend">Onix 2019 · Aguardando aprovação</span>
+            <span class="s-ok">Onix 2019 · Em serviço</span>
+            <span class="s-no">Onix 2019 · Orçamento recusado</span>
+          </small>
+        </div>
+        <span class="dot s-pend">1</span>   <!-- bolinha de pendências -->
+      </label>
+
+      <label class="ch ch2" for="c2">
+        <div># QWE-4F56<small>HB20 2021 · Em serviço</small></div>
+      </label>
+
+      <label class="ch ch3" for="c3">
+        <div># RTY-7G89<small>Civic 2017 · Pronto para retirada</small></div>
+      </label>
+
+      <img id="logoVelozLateral" src="/modelo/logo-veloz-chat.png" alt="Veloz Chat">
+    </aside>
+
+    <main>
+
+      <!-- ==========================================================
+          3. CANAL 1 – ABC-1D23 (o único com orçamento interativo)
+          ========================================================== -->
+      <section class="painel p1">
+        <div class="top">
+          <b># ABC-1D23 · Onix 2019 · Carla Souza</b>
+
+          <!-- Etapas enquanto pendente/recusado -->
+          <div class="steps steps-pend">
+            <span class="st past">Recebido</span><span class="st past">Em diagnóstico</span>
+            <span class="st on">Aguardando aprovação</span><span class="st">Em serviço</span>
+            <span class="st">Pronto para retirada</span>
+          </div>
+          <!-- Etapas depois de aprovado -->
+          <div class="steps steps-ok">
+            <span class="st past">Recebido</span><span class="st past">Em diagnóstico</span>
+            <span class="st past">Aguardando aprovação</span><span class="st on">Em serviço</span>
+            <span class="st">Pronto para retirada</span>
+          </div>
+        </div>
+
+        <div class="msgs">
+          <div class="sys">— OS aberta pela recepção às 08:10 —</div>
+
+          <div class="m">
+            <div class="w">Rafael<span class="tag">Mecânico</span><span>09:05</span></div>
+            <div>Diagnóstico feito: pastilhas no limite.</div>
+            <div class="ph">📷 Foto: pastilha dianteira desgastada</div>
+          </div>
+
+          <div class="m">
+            <div class="w">Recepção<span class="tag">Recepção</span><span>09:12</span></div>
+            <div>Carla, enviei o orçamento aqui. É só aprovar.</div>
+
+            <!-- Cartão de orçamento: edite os itens e valores aqui -->
+            <div class="card q">
+              <b>Orçamento</b>
+              <table>
+                <tr><td>Pastilhas de freio (jogo)</td><td>R$ 280,00</td></tr>
+                <tr><td>Mão de obra</td><td>R$ 120,00</td></tr>
+                <tr><td><b>Total</b></td><td><b>R$ 400,00</b></td></tr>
+              </table>
+
+              <!-- Estado: pendente (botões só na visão Cliente) -->
+              <div class="s-pend">
+                <div class="botoes">
+                  <label for="o-ok" class="btn ok">✔ Aprovar</label>
+                  <label for="o-no" class="btn no">✖ Recusar</label>
+                </div>
+                <div class="aguarda res">⏳ Aguardando cliente</div>
+              </div>
+              <!-- Estado: aprovado -->
+              <div class="s-ok res verde">✔ Aprovado
+                <label for="o-pend" class="btn sec">↺ Reiniciar demo</label></div>
+              <!-- Estado: recusado -->
+              <div class="s-no res vermelho">✖ Recusado
+                <label for="o-pend" class="btn sec">↺ Reiniciar demo</label></div>
+            </div>
+          </div>
+
+          <!-- Mensagens automáticas que aparecem após a decisão -->
+          <div class="sys s-ok">— Orçamento aprovado por Carla Souza —</div>
+          <div class="sys s-no">— Carla Souza recusou o orçamento —</div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+          4. CANAL 2 – QWE-4F56 (conteúdo fixo)
+          ========================================================== -->
+      <section class="painel p2">
+        <div class="top">
+          <b># QWE-4F56 · HB20 2021 · João Lima</b>
+          <div class="steps">
+            <span class="st past">Recebido</span><span class="st past">Em diagnóstico</span>
+            <span class="st past">Aguardando aprovação</span><span class="st on">Em serviço</span>
+            <span class="st">Pronto para retirada</span>
+          </div>
+        </div>
+        <div class="msgs">
+          <div class="sys">— OS aberta pela recepção às 07:40 —</div>
+          <div class="sys">— Orçamento aprovado por João Lima às 08:30 —</div>
+          <div class="m">
+            <div class="w">Marcos<span class="tag">Mecânico</span><span>09:40</span></div>
+            <div>Troca de óleo em andamento. Previsão: 11h.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+          5. CANAL 3 – RTY-7G89 (conteúdo fixo)
+          ========================================================== -->
+      <section class="painel p3">
+        <div class="top">
+          <b># RTY-7G89 · Civic 2017 · Ana Reis</b>
+          <div class="steps">
+            <span class="st past">Recebido</span><span class="st past">Em diagnóstico</span>
+            <span class="st past">Aguardando aprovação</span><span class="st past">Em serviço</span>
+            <span class="st on">Pronto para retirada</span>
+          </div>
+        </div>
+        <div class="msgs">
+          <div class="sys">— Status alterado para Pronto para retirada —</div>
+          <div class="m">
+            <div class="w">Recepção<span class="tag">Recepção</span><span>10:02</span></div>
+            <div>Seu carro está pronto! Retirada até 18h.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 6. BARRA DE ENVIO (apenas visual: enviar de verdade exige JavaScript) ============ -->
+      <div class="envio">
+        <input type="text" disabled placeholder="Não é possível ainda">
+        <span class="btn sec">📷 Foto</span>
+        <span class="btn ok">Enviar</span>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
